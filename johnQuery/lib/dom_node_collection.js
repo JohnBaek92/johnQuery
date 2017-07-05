@@ -99,9 +99,10 @@ class DOMNodeCollection {
   }
 
   off(eventName) {
+    debugger
     this.each( node => {
     if (!node.events || !node.events[eventName] ) return;
-    node.events[eventName].each( handler => {
+    node.events[eventName].forEach( handler => {
       node.removeEventListener(eventName, handler);
     });
     node.events[eventName] = [];

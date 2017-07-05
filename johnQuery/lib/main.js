@@ -3,7 +3,7 @@ const DOMNodeCollection = require("./dom_node_collection.js");
 const _docReadyCallbacks = [];
 let _docReady = false;
 
-window.$l = selector => {
+window.$j = selector => {
   let elementList;
   switch(typeof(selector)) {
     case "string":
@@ -32,7 +32,7 @@ getNodesFromDom = selector => {
   return new DomNodeCollection(nodes_array);
 };
 
-$l.extend = (base, ...otherArgs) => {
+$j.extend = (base, ...otherArgs) => {
   otherArgs.forEach(el => {
     Object.keys(el).forEach(key => {
       base[key] = el[key];
@@ -41,7 +41,7 @@ $l.extend = (base, ...otherArgs) => {
   return base;
 };
 
-$l.ajax = function(options) {
+$j.ajax = function(options) {
   const defaults = {
     type: 'GET',
     success: () => {},

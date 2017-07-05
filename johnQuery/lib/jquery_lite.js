@@ -63,89 +63,11 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const DOMNodeCollection = __webpack_require__(1);
-
-const _docReadyCallbacks = [];
-let _docReady = false;
-
-window.$l = selector => {
-  let elementList;
-  switch(typeof(selector)) {
-    case "string":
-      elementList = document.querySelectorAll(selector);
-      return new DOMNodeCollection(elementList);
-    case "object":
-      if(selector instanceof HTMLElement) {
-        return new DOMNodeCollection([selector]);
-      }
-    case "function":
-      return registerDocReadyCallback(selector);
-  }
-};
-
-registerDocReadyCallback = func => {
-  if(!_docReady){
-    _docReadyCallbacks.push(func);
-  } else {
-    func();
-  }
-};
-
-getNodesFromDom = selector => {
-  const nodes = document.querySelectorAll(selector);
-  const nodes_array = Array.from(nodes);
-  return new DomNodeCollection(nodes_array);
-};
-
-$l.extend = (base, ...otherArgs) => {
-  otherArgs.forEach(el => {
-    Object.keys(el).forEach(key => {
-      base[key] = el[key];
-    });
-  });
-  return base;
-};
-
-$l.ajax = function(options) {
-  const defaults = {
-    type: 'GET',
-    success: () => {},
-    error: () => {},
-    url: window.location.href,
-    data: {},
-    contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
-  };
-  options = $l.extend(defaults, options);
-
-  const xhr = new XMLHttpRequest();
-  xhr.open(options.type, options.url);
-  xhr.onload = function () {
-    if (xhr.status >= 200 && xhr.status < 300) {
-      options.success(JSON.parse(xhr.response));
-    } else {
-      options.error(JSON.parse(xhr.response));
-    }
-  };
-
-  xhr.send(options.data);
-};
-
-
-document.addEventListener('DOMContentLoaded', () => {
-  _docReady = true;
-  _docReadyCallbacks.forEach( func => func() );
-});
-
-
-/***/ }),
-/* 1 */
 /***/ (function(module, exports) {
 
 class DOMNodeCollection {
@@ -240,31 +162,105 @@ class DOMNodeCollection {
   }
 
   on(eventName, callback) {
-    this.each(node => {
+    this.each( node => {
       node.addEventListener(eventName, callback);
-      const eventKey = `jqliteEvents-${eventName}`;
-      if (typeof node[eventKey] === "undefined") {
-        node[eventKey] = [];
-      }
-      node[eventKey].push(callback);
+      if (typeof node.events === 'undefined') node.events = {};
+      if (typeof node.events[eventName] === 'undefined') node.events[eventName] = [];
+      node.events[eventName].push(callback);
     });
   }
 
   off(eventName) {
-    this.each(node => {
-      const eventKey = `jqliteEvents-${eventName}`;
-      if (node[eventKey]) {
-        node[eventKey].forEach(callback => {
-          node.removeEventListener(eventName, callback);
-        });
-      }
-      node[eventKey] = [];
+    debugger
+    this.each( node => {
+    if (!node.events || !node.events[eventName] ) return;
+    node.events[eventName].forEach( handler => {
+      node.removeEventListener(eventName, handler);
+    });
+    node.events[eventName] = [];
     });
   }
-
 }
 
 module.exports = DOMNodeCollection;
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const DOMNodeCollection = __webpack_require__(0);
+
+const _docReadyCallbacks = [];
+let _docReady = false;
+
+window.$j = selector => {
+  let elementList;
+  switch(typeof(selector)) {
+    case "string":
+      elementList = document.querySelectorAll(selector);
+      return new DOMNodeCollection(elementList);
+    case "object":
+      if(selector instanceof HTMLElement) {
+        return new DOMNodeCollection([selector]);
+      }
+    case "function":
+      return registerDocReadyCallback(selector);
+  }
+};
+
+registerDocReadyCallback = func => {
+  if(!_docReady){
+    _docReadyCallbacks.push(func);
+  } else {
+    func();
+  }
+};
+
+getNodesFromDom = selector => {
+  const nodes = document.querySelectorAll(selector);
+  const nodes_array = Array.from(nodes);
+  return new DomNodeCollection(nodes_array);
+};
+
+$j.extend = (base, ...otherArgs) => {
+  otherArgs.forEach(el => {
+    Object.keys(el).forEach(key => {
+      base[key] = el[key];
+    });
+  });
+  return base;
+};
+
+$j.ajax = function(options) {
+  const defaults = {
+    type: 'GET',
+    success: () => {},
+    error: () => {},
+    url: window.location.href,
+    data: {},
+    contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
+  };
+  options = $l.extend(defaults, options);
+
+  const xhr = new XMLHttpRequest();
+  xhr.open(options.type, options.url);
+  xhr.onload = function () {
+    if (xhr.status >= 200 && xhr.status < 300) {
+      options.success(JSON.parse(xhr.response));
+    } else {
+      options.error(JSON.parse(xhr.response));
+    }
+  };
+
+  xhr.send(options.data);
+};
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  _docReady = true;
+  _docReadyCallbacks.forEach( func => func() );
+});
 
 
 /***/ })
