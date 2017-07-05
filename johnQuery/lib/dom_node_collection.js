@@ -90,28 +90,23 @@ class DOMNodeCollection {
   }
 
   on(eventName, callback) {
-    this.each(node => {
+    this.each( node => {
       node.addEventListener(eventName, callback);
-      const eventKey = `jqliteEvents-${eventName}`;
-      if (typeof node[eventKey] === "undefined") {
-        node[eventKey] = [];
-      }
-      node[eventKey].push(callback);
+      if (typeof node.events === 'undefined') node.events = {};
+      if (typeof node.events[eventName] === 'undefined') node.events[eventName] = [];
+      node.events[eventName].push(callback);
     });
   }
 
   off(eventName) {
-    this.each(node => {
-      const eventKey = `jqliteEvents-${eventName}`;
-      if (node[eventKey]) {
-        node[eventKey].forEach(callback => {
-          node.removeEventListener(eventName, callback);
-        });
-      }
-      node[eventKey] = [];
+    this.each( node => {
+    if (!node.events || !node.events[eventName] ) return;
+    node.events[eventName].each( handler => {
+      node.removeEventListener(eventName, handler);
+    });
+    node.events[eventName] = [];
     });
   }
-
 }
 
 module.exports = DOMNodeCollection;
