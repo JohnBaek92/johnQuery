@@ -1,112 +1,102 @@
 class DOMNodeCollection {
-  constructor(nodes) {
-    this.nodes = nodes;
+  constructor(collection = []) {
+    this.collection = collection;
   }
 
-//prototype methods
-
-  each(cb) {
-    this.nodes.forEach(cb);
-  }
-
-  html(argument) {
-    if (typeof argument === "string") {
-      this.each(node => node.innerHTML = argument);
+  html(arg) {
+    if (arg === undefined) {
+      return this.collection[0].innerHTML;
     } else {
-      if (this.nodes.length > 0) {
-        return this.nodes[0].innerHTML;
-      }
-    }
-  }
-
-  empty() {
-    this.html('');
-  }
-
-  append(argument) {
-    if(this.nodes.length === 0) return;
-
-    if(typeof(argument) === "object" && !(argument instanceof DOMNodeCollection)) {
-      argument = $l(children);
-    }
-
-    if(typeof argument === "string") {
-      this.each(node => node.innerHTML += argument);
-    } else if (argument instanceof DOMNodeCollection) {
-      this.each(node => {
-        node.appendChild(childNode.cloneNode(true));
+      this.collection.forEach((node) => {
+        node.innerHTML = arg;
+        return;
       });
     }
   }
 
-  attr(name, value) {
-    this.nodes.each(node => {
-      node.setAttribute(name, value);
-    });
+  empty() {
+    return this.html('');
   }
 
-  addClass(name) {
-    this.nodes.each(node => node.classList.add(name));
+  append(content) {
+    if (typeof content === 'string') {
+      this.collection.forEach((node) => {
+        node.innerHTML += content;
+      });
+    } else if (content instanceof DOMNodeCollection) {
+      this.collection.forEach((parent) => {
+        content.collection.forEach((child) => {
+          parent.appendChild(child.cloneNode(true));
+        });
+      });
+    }
   }
 
-  removeClass(name) {
-    this.nodes.each(node => node.classList.remove(name));
+  attr(key, val) {
+    if (val === undefined) {
+      return this.collection[0].getAttribute(key);
+    } else {
+      this.collection[0].setAttribute(key, val);
+      return;
+    }
   }
 
-// traversal
+  addClass(className) {
+    this.collection.forEach(node => node.classList.add(className));
+  }
+
+  removeClass(className) {
+    this.collection.forEach(node => node.classList.remove(className));
+  }
+
   children() {
-    let result = [];
-    this.elements.each(el => {
-      result = result.concat(Array.from(el.children));
+    let childrenCollection = [];
+    this.collection.forEach((childElement) => {
+      childrenCollection = childrenCollection.concat(childElement.children);
     });
 
-    return new DOMNodeCollection(result);
+    return new DOMNodeCollection(childrenCollection);
   }
 
   parent() {
-    let result = [];
-    this.elements.each(el => {
-      result.push(el.parentNode);
+    let parentCollection = [];
+    this.collection.forEach((childElement) => {
+      parentCollection = parentCollection.concat(childElement.parentElement);
     });
 
-    return new DOMNodeCollection(result);
+    return new DOMNodeCollection(parentCollection);
   }
 
   find(selector) {
-    let result = [];
-    this.elements.each(el => {
-      let elementList = el.querySelectorAll(selector);
-      result = result.concat(Array.from(elementList));
+    let selectorNodes = [];
+    this.collection.forEach((node) => {
+      const allNodes = node.querySelectorAll(selector);
+      selectorNodes = selectorNodes.concat(Array.from(allNodes));
     });
-    return result;
+    return new DOMNodeCollection(selectorNodes);
   }
 
   remove() {
-    this.elements.each(el => {
-      const parent = el.parentNode;
-      parent.removeChild(el);
-  });
-    this.elements = [];
+    this.collection.forEach(node => node.parentNode.removeChild(node));
   }
 
-  on(eventName, callback) {
-    this.each( node => {
-      node.addEventListener(eventName, callback);
-      if (typeof node.events === 'undefined') node.events = {};
-      if (typeof node.events[eventName] === 'undefined') node.events[eventName] = [];
-      node.events[eventName].push(callback);
+  on(e, callback) {
+    this.collection.forEach((node) => {
+      node.addEventListener(e, callback);
+      node.eventCallBack = callback;
+    });
+    return;
+  }
+
+  off(e) {
+    this.collection.forEach((node) => {
+      const callback = node.eventCallBack;
+        node.removeEventListener(e, callback);
     });
   }
 
-  off(eventName) {
-    debugger
-    this.each( node => {
-    if (!node.events || !node.events[eventName] ) return;
-    node.events[eventName].forEach( handler => {
-      node.removeEventListener(eventName, handler);
-    });
-    node.events[eventName] = [];
-    });
+  eq(idx) {
+    return new DOMNodeCollection([this.collection[idx]]);
   }
 }
 

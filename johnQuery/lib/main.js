@@ -1,72 +1,65 @@
-const DOMNodeCollection = require("./dom_node_collection.js");
+const DOMNodeCollection = require('./dom_node_collection');
 
-const _docReadyCallbacks = [];
-let _docReady = false;
+const functionQueue = [];
+let docReady = false;
+document.addEventListener("DOMContentLoaded", execute);
 
-window.$j = selector => {
-  let elementList;
-  switch(typeof(selector)) {
-    case "string":
-      elementList = document.querySelectorAll(selector);
-      return new DOMNodeCollection(elementList);
-    case "object":
-      if(selector instanceof HTMLElement) {
-        return new DOMNodeCollection([selector]);
-      }
-    case "function":
-      return registerDocReadyCallback(selector);
-  }
-};
-
-registerDocReadyCallback = func => {
-  if(!_docReady){
-    _docReadyCallbacks.push(func);
-  } else {
+function execute() {
+  docReady = true;
+  functionQueue.forEach((func) => {
     func();
+  });
+}
+
+window.$j = function(selector) {
+  if (typeof selector === "function") {
+    if (docReady) {
+      selector();
+    } else {
+      functionQueue.push(selector);
+    }
+  } else if (selector instanceof HTMLElement) {
+      return new DOMNodeCollection([selector]);
+  } else if (typeof selector === "string") {
+      const nodeList = document.querySelectorAll(selector);
+      const nodeListArray = Array.from(nodeList);
+      return new DOMNodeCollection(nodeListArray);
+  } else if (selector === window) {
+      return new DOMNodeCollection([window]);
   }
 };
 
-getNodesFromDom = selector => {
-  const nodes = document.querySelectorAll(selector);
-  const nodes_array = Array.from(nodes);
-  return new DomNodeCollection(nodes_array);
-};
-
-$j.extend = (base, ...otherArgs) => {
-  otherArgs.forEach(el => {
-    Object.keys(el).forEach(key => {
-      base[key] = el[key];
-    });
+$j.extend = function(objectA, ...objects) {
+  objects.forEach((object) => {
+    for (let key in object) {
+      objectA[key] = object[key];
+    }
   });
-  return base;
+  return objectA;
 };
 
-$j.ajax = function(options) {
+$j.ajax = function(options = {}) {
   const defaults = {
-    type: 'GET',
-    success: () => {},
-    error: () => {},
-    url: window.location.href,
+    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+    method: "GET",
+    url: "",
     data: {},
-    contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
+    success: function() {},
+    error: function() {}
   };
-  options = $l.extend(defaults, options);
 
-  const xhr = new XMLHttpRequest();
-  xhr.open(options.type, options.url);
-  xhr.onload = function () {
-    if (xhr.status >= 200 && xhr.status < 300) {
-      options.success(JSON.parse(xhr.response));
+  $j.extend(defaults, options);
+  const request = new XMLHttpRequest();
+
+  request.open(defaults.method, defaults.url);
+  request.onload = function() {
+    if (request.status === 200) {
+      defaults.success(JSON.parse(request.response));
     } else {
-      options.error(JSON.parse(xhr.response));
+      defaults.error(JSON.parse(request.response));
     }
   };
-
-  xhr.send(options.data);
+  request.send(defaults.data);
 };
 
-
-document.addEventListener('DOMContentLoaded', () => {
-  _docReady = true;
-  _docReadyCallbacks.forEach( func => func() );
-});
+module.exports = $j;

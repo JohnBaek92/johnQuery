@@ -1,0 +1,111 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+  font-family: sans-serif;
+  list-style: none;
+}
+
+li {
+  width: 15px;
+  height: 15px;
+  border: 1px solid rgb(103, 101, 101);
+}
+
+figure {
+  display: inline-block;
+}
+ul {
+  display: flex;
+}
+
+body {
+  left: 50%;
+  text-align: center;
+}
+
+.snake {
+  background: #99aaff;
+}
+
+.apple {
+  background: #027e2b;
+}
+
+.game-over, .new-game {
+  background: white;
+  border: 1px solid black;
+  display: block;
+  width: 150px;
+  position: absolute;
+  left: 50%;
+  top: 200px;
+  padding: 20px;
+  margin-left: -96px;
+}
+
+.game-over:hover, .new-game:hover {
+  background: black;
+  color: white;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
+.snake-head {
+  background: #a100e6;
+}
+
+.directions-pt-1 {
+	display: flex;
+	justify-content: center;
+}
+
+.directions-pt-2 {
+	display: flex;
+	justify-content: center;
+}
+
+#footer {
+  display: flex;
+	justify-content: center;
+  margin-top: 20px;
+  font-size: 16px;
+  color: black;
+}
+
+#footer-right {
+  padding: 10px;
+}
+
+#footer-right {
+  display: flex;
+  justify-content: space-around;
+  width: 310px;
+  font-weight: bold;
+}
+
+#name, a {
+  text-decoration: none;
+}
+
+a:hover {
+  color: red;
+}
