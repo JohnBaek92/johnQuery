@@ -4,7 +4,7 @@
 
 ## What is johnQuery?
 
-johnQuery is a lightweight Javascript library inspired by jQuery. It simplifies HTML document traversing, event handling, and AJAX requests in Javascript.
+johnQuery is a lightweight JavaScript library inspired by jQuery. It simplifies HTML document traversing, event handling, and AJAX requests in JavaScript.
 
 ## johnQuery Installation
 
