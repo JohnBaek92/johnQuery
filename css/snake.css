@@ -24,7 +24,7 @@ time, mark, audio, video {
 li {
   width: 15px;
   height: 15px;
-  border: 1px solid rgb(103, 101, 101);
+  border: 1px solid black;
 }
 
 figure {
@@ -67,6 +67,10 @@ body {
   background: black;
   color: white;
   cursor: pointer;
+}
+
+.score {
+	margin-top: 5px;
 }
 
 .hidden {
