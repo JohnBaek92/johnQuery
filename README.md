@@ -35,7 +35,7 @@ $j('li').html('johnQuery is awesome')
 // select li elements and change innerHTML to 'johnQuery is awesome'
 ```
 
-You can implement event handlers...
+You can implement event handlers:
 
 ``` javascript
 $j('.button').on('click', () => {
@@ -44,7 +44,7 @@ $j('.button').on('click', () => {
 // clicking anything with the button class will log the above message
 ```
 
-You can also perform an AJAX request...
+You can also perform an AJAX request:
 
 ``` javascript
 // fetches weather information
@@ -64,43 +64,43 @@ $j.ajax({
 ### `DOMNodeCollection.prototype` Methods
 
 #### `html`
-* Takes a string as an optional argument
-* If no argument is given, it returns the `innerHTML` of the first node of the collection
-* if a string is given as an argument, the string is set as the `innerHTML` of each node in the collection
+* Takes a string as an optional argument.
+* If no argument is given, it returns the `innerHTML` of the first node of the collection.
+* if a string is given as an argument, the string is set as the `innerHTML` of each node in the collection.
 
 #### `empty`
-* Removes all child nodes in the node collection
+* Removes all child nodes in the node collection.
 
 #### `append`
-* Takes a string, HTML element, or pDOM wrapped node collection
-* Appends the `outerHTML` of the given argument to the `innerHTML` of each element in the node collection
+* Takes a string, HTML element, or johnQuery wrapped node collection.
+* Appends the `outerHTML` of the given argument to the `innerHTML` of each element in the node collection.
 
 #### `attr`
-* Takes an attribute parameter with an optional value parameter (attribute, value)
-* Given just an attribute parameter, returns the first element in the node collection that matches the attribute
-* Given both attribute and value paramters, sets the matched attribute to the value paramter for each node in the collection
+* Takes an attribute parameter with an optional value parameter (attribute, value).
+* Given just an attribute parameter, returns the first element in the node collection that matches the attribute.
+* Given both attribute and value parameters, sets the matched attribute to the value paramter for each node in the collection.
 
 #### `addClass`
-* Takes multiple classes as arguments and adds each to the list of classes of each node in the node collection
+* Takes multiple classes as arguments and adds each to the list of classes of each node in the node collection.
 
 #### `removeClass`
-* Takes multiple classes as arguments and removes each from the class list of each node in the node collection
+* Takes multiple classes as arguments and removes each from the class list of each node in the node collection.
 
 #### `children`
-* Returns collection of all children of each node
+* Returns collection of all children of each node.
 
 #### `parent`
-* Returns collection of all parent nodes
+* Returns collection of all parent nodes.
 
 #### `find`
 * Takes a selector as an argument and returns all descendants of each node in the set of matched nodes.
 
 #### `remove`
-* Removes all instances of each node from the DOM
+* Removes all instances of each node from the DOM.
 
 #### `on`
-* Takes as arguments an event and callback and adds an eventListener for each element in the collection
-* Activates callback action when triggered  
+* Takes as arguments an event and callback and adds an eventListener for each element in the collection.
+* Activates callback action when triggered.  
 
 #### `off`
-* Takes an event as an argument and removes all eventListeners for each element in the collection
+* Takes an event as an argument and removes all eventListeners for each element in the collection.
